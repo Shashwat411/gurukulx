@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard – GPN Submission Portal</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+
+  <!-- ── Navigation ───────────────────────────── -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-badge">GPN</span>
+      <div>
+        <span class="nav-title">Submission Portal</span>
+        <span class="nav-sub">Computer Engineering</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="user-chip">
+        <span class="user-avatar" id="navAvatar">?</span>
+        <div>
+          <span class="user-name" id="navName">Loading…</span>
+          <span class="user-role">Student</span>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ── Main layout ──────────────────────────── -->
+  <main class="dashboard-main">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-nav">
+        <li><a href="#profile" class="sidebar-link active" onclick="showSection('profile',this)">
+          <span>👤</span> My Profile
+        </a></li>
+        <li><a href="#upload" class="sidebar-link" onclick="showSection('upload',this)">
+          <span>📤</span> Upload Submission
+        </a></li>
+        <li><a href="#submissions" class="sidebar-link" onclick="showSection('submissions',this)">
+          <span>📋</span> My Submissions
+        </a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <p>Max file size: 20 MB</p>
+        <p>Allowed: PDF, ZIP</p>
+      </div>
+    </aside>
+
+    <!-- Content area -->
+    <div class="content-area">
+
+      <!-- Global alert -->
+      <div id="globalAlert" class="alert hidden"></div>
+
+      <!-- ── Profile Section ── -->
+      <section id="section-profile" class="dash-section active">
+        <div class="section-header">
+          <h2>My Profile</h2>
+          <p>Your academic information at a glance</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileAvatar">?</div>
+          <div class="profile-details">
+            <div class="detail-row"><span class="detail-label">Full Name</span><span id="profileName" class="detail-value">—</span></div>
+            <div class="detail-row"><span class="detail-label">Enrollment No.</span><span id="profileEnroll" class="detail-value">—</span></div>
+            <div class="detail-row"><span class="detail-label">Batch</span><span id="profileBatch" class="detail-value">—</span></div>
+            <div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">Computer Engineering</span></div>
+            <div class="detail-row"><span class="detail-label">Institute</span><span class="detail-value">Govt. Polytechnic Nagpur</span></div>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-num" id="statTotal">0</span>
+            <span class="stat-label">Total Submissions</span>
+          </div>
+          <div class="stat-card approved">
+            <span class="stat-num" id="statApproved">0</span>
+            <span class="stat-label">Approved</span>
+          </div>
+          <div class="stat-card pending">
+            <span class="stat-num" id="statPending">0</span>
+            <span class="stat-label">Pending</span>
+          </div>
+          <div class="stat-card rejected">
+            <span class="stat-num" id="statRejected">0</span>
+            <span class="stat-label">Rejected</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Upload Section ── -->
+      <section id="section-upload" class="dash-section">
+        <div class="section-header">
+          <h2>Upload Submission</h2>
+          <p>Submit your assignments, practicals, and microprojects</p>
+        </div>
+
+        <form id="uploadForm" class="upload-form" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="submissionType">Submission Type</label>
+              <select id="submissionType" name="submissionType" required>
+                <option value="">-- Select Type --</option>
+                <option value="assignment">Assignment</option>
+                <option value="practical">Practical</option>
+                <option value="microproject">Microproject</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="subjectCode">Subject Code</label>
+              <input type="text" id="subjectCode" name="subjectCode" placeholder="e.g. CE301" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="submissionTitle">Title / Description</label>
+            <input type="text" id="submissionTitle" name="submissionTitle" placeholder="e.g. Assignment 1 – Introduction to OS" required />
+          </div>
+
+          <div class="form-group">
+            <label>Upload File (PDF or ZIP, max 20 MB)</label>
+            <div class="file-dropzone" id="dropzone">
+              <div class="dropzone-inner">
+                <span class="dropzone-icon">📁</span>
+                <p>Drag & drop your file here or <span class="browse-link" onclick="document.getElementById('fileInput').click()">browse</span></p>
+                <p class="dropzone-hint">Accepted: .pdf, .zip — Max 20 MB</p>
+              </div>
+              <input type="file" id="fileInput" name="file" accept=".pdf,.zip" style="display:none" />
+            </div>
+            <div id="fileInfo" class="file-info hidden"></div>
+          </div>
+
+          <div id="uploadAlert" class="alert hidden"></div>
+
+          <button type="submit" class="btn-primary" id="uploadBtn">
+            <span id="uploadBtnText">Upload Submission</span>
+            <span id="uploadLoader" class="spinner hidden"></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- ── Submissions Section ── -->
+      <section id="section-submissions" class="dash-section">
+        <div class="section-header">
+          <h2>My Submissions</h2>
+          <p>Track the status of all your uploaded submissions</p>
+        </div>
+        <div id="submissionsContainer">
+          <div class="loading-state">
+            <span class="spinner"></span> Loading submissions…
+          </div>
+        </div>
+      </section>
+
+    </div><!-- end content-area -->
+  </main>
+
+  <script src="/static/js/student.js"></script>
+</body>
+</html>

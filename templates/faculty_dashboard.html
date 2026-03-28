@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Dashboard – GPN Submission Portal</title>
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+
+  <!-- ── Navigation ── -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-badge">GPN</span>
+      <div>
+        <span class="nav-title">Submission Portal</span>
+        <span class="nav-sub">Faculty Panel</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="user-chip">
+        <span class="user-avatar faculty-av" id="navAvatar">F</span>
+        <div>
+          <span class="user-name" id="navName">Loading…</span>
+          <span class="user-role">Faculty</span>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ── Main layout ── -->
+  <main class="dashboard-main faculty-main">
+
+    <div class="content-area full-width">
+
+      <!-- Page title -->
+      <div class="section-header">
+        <h2>Student Submissions</h2>
+        <p>Review, approve, or reject student submissions</p>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="stats-grid compact">
+        <div class="stat-card"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Total</span></div>
+        <div class="stat-card approved"><span class="stat-num" id="statApproved">0</span><span class="stat-label">Approved</span></div>
+        <div class="stat-card pending"><span class="stat-num" id="statPending">0</span><span class="stat-label">Pending</span></div>
+        <div class="stat-card rejected"><span class="stat-num" id="statRejected">0</span><span class="stat-label">Rejected</span></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="form-group inline">
+          <label for="filterSubject">Subject Code</label>
+          <input type="text" id="filterSubject" placeholder="e.g. CE301" />
+        </div>
+        <div class="form-group inline">
+          <label for="filterBatch">Batch</label>
+          <select id="filterBatch">
+            <option value="">All Batches</option>
+            <option value="A">Batch A</option>
+            <option value="B">Batch B</option>
+            <option value="C">Batch C</option>
+          </select>
+        </div>
+        <button class="btn-secondary" onclick="applyFilters()">🔍 Filter</button>
+        <button class="btn-ghost" onclick="clearFilters()">✕ Clear</button>
+      </div>
+
+      <!-- Global alert -->
+      <div id="globalAlert" class="alert hidden"></div>
+
+      <!-- Submissions table -->
+      <div class="table-wrapper" id="tableWrapper">
+        <div class="loading-state">
+          <span class="spinner"></span> Loading submissions…
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/static/js/faculty.js"></script>
+</body>
+</html>
